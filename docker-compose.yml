@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .  # Thư mục hiện tại
+      dockerfile: dockerfile  # Dockerfile phục vụ Nginx
+    container_name: nginx_web
+    ports:
+      - "8080:80"  # Map cổng 80 trên container thành cổng 8080 trên máy host
+    volumes:
+      - .:/usr/share/nginx/html  # Đồng bộ tệp dự án
+    restart: always
+
+  db:
+    image: mysql:latest
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: nike_db
+      MYSQL_USER: nike_user
+      MYSQL_PASSWORD: nike_password
+    ports:
+      - "3306:3306"  # Map cổng 3306 trên container thành cổng 3306 trên máy host
+    volumes:
+      - ./int.sql:/docker-entrypoint-initdb.d/init.sql  # Khởi tạo dữ liệu SQL
+    restart: always
